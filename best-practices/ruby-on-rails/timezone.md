@@ -7,14 +7,14 @@
 
 ### TL;DR;
 
-1. Convert datetime string with timezone info avoid ambiguous
-2. Convert into a explict timeozne (eg. by using `Time.zone.xxx`)
-
-Always use `Time.zone.xxx`, `Time.xxx.in_time_zone` or `n.days.ago` (and similar rails method calls) unless you know what you are doing.
+1. Convert datetime string with timezone info to avoid ambiguous.
+3. Use `Time.utc(...)` when you need a UTC time.
+3. Otherwise always use `Time.zone.xxx`, `Time.xxx.in_time_zone` or `n.days.ago`
+  (or similar rails method calls) unless you know what you are doing.
 
 ### Try out the timezone support of a specific command
 
-sometimes you may want to try out is this command support timezone? You can do:
+Sometimes you may want to try out is this command support timezone? You can do:
 
 > Given that your system time is Singapore UTC+8
 
