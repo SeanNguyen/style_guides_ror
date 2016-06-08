@@ -97,7 +97,8 @@ class User
                                        _span,
                                        _multiple_lines)
     if or_when_if_condition &&
-       but_no_span_multiple_lines
+       span_multiple_lines &&
+       but_without_empty_line
       is_also_hard_to_read
     end
   end
