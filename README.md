@@ -11,6 +11,10 @@ High level guidelines:
 * Don't write code that guesses at future functionality.
 * [Keep the code simple](https://jml.io/2012/02/simple-made-easy.html).
 * [Do not program "defensively"](http://www.erlang.se/doc/programming_rules.shtml#HDR11).
+* Take ownership of the project. Meaning that server stability and code quality etc. **are** your business.
+  * Do test your new changes.
+  * Do think about side effects that your changes might have.
+* Avoid selective ownership of code. ("mine", "not mine", "yours")
 
 A note on the language:
 
