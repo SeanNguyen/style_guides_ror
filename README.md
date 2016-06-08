@@ -3,7 +3,7 @@
 High level guidelines:
 
 * Be consistent.
-* Don't rewrite existing code to follow this guide.
+* Don't rewrite existing code just to follow this guide. But try to refine the code when you touch it.
 * Don't violate a guideline without a good reason.
 * A reason is good when you can convince a teammate.
 * Don't write code that guesses at future functionality.
