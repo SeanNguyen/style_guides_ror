@@ -23,13 +23,35 @@ To avoid inconsistency between `schema.rb` and real DB schema. You can:
 
 ## Do
 
-* Re-run `rake db:migrate` and double check the changes in `db/schema.rb` before you commit.
+* Re-run `rake db:migrate` and double check the changes in `db/schema.rb` before you commit it.
 * Try `rake db:rollback` for your own db migrations to make sure it it reversible.
 * Avoid plain SQL in migration file. Especially DDL (create table, drop table, alter....)
 * Always add index for foreign key columns.
 * [Add foreign key constraints][fkey] in migrations.
 * If there are default values, set them in migrations.
 * Keep `db/schema.rb` under version control.
+* Use `say` in migration
+* Set an empty string as the default constraint for non-required string and text fields in migration.
+
+```ruby
+class CreateClearanceUsers < ActiveRecord::Migration
+  def change
+    create_table :users  do |t|
+      t.references :group, index: true # use reference to create foreign key column and index
+      t.string :email, null: false # add null constraint when possible
+      t.string :name, null: false, default: '' # for optional string
+      t.integer :gender, null: false, default: 1 # default value for enum attribute
+      t.boolean :active, null: false, default: true # default for boolean column
+
+      t.timestamps null: false
+
+      say 'Use say instead of puts in migration'
+    end
+
+    add_index :users, :email # add index for frequent search column
+  end
+end
+```
 
 [fkey]: http://robots.thoughtbot.com/referential-integrity-with-foreign-keys
 
