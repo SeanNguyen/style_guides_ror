@@ -1,6 +1,4 @@
-# WORK IN PROGRESS
-
-Please don't touch it until @brucelihb gather the basic set of our guidelines. Slack him if you have existing document to be added in.
+# Guides
 
 High level guidelines:
 
@@ -22,6 +20,13 @@ A note on the language:
 * "Don't" means there's never a good reason.
 * "Prefer" indicates a better option and its alternative to watch out for.
 * "Use" is a positive instruction.
+
+Go to each folders for detailed guidelines.
+
+* [best-practices](/best-practices)
+* [protocol](/protocol)
+* [security](/security)
+* [style](/style)
 
 ## Contributing
 
