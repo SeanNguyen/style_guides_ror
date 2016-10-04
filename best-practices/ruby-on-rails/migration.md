@@ -13,7 +13,7 @@ For more information: http://guides.rubyonrails.org/active_record_migrations.htm
 
 Keep in mind: We can version migration files and `schema.rb` (1 and 2). But not for the real DB
 schema (3 and 4). So if there are any conflicts, you then need to change in DB manually,
-which we should avoid.
+which should be avoided.
 
 To avoid inconsistency between `schema.rb` and real DB schema. You can:
 
@@ -24,13 +24,13 @@ To avoid inconsistency between `schema.rb` and real DB schema. You can:
 ## Do
 
 * Re-run `rake db:migrate` and double check the changes in `db/schema.rb` before you commit it.
-* Try `rake db:rollback` for your own db migrations to make sure it it reversible.
+* Run `rake db:rollback` before commit to make sure that it is reversible.
 * Avoid plain SQL in migration file. Especially DDL (create table, drop table, alter....)
 * Always add index for foreign key columns.
 * [Add foreign key constraints][fkey] in migrations.
 * If there are default values, set them in migrations.
 * Keep `db/schema.rb` under version control.
-* Use `say` in migration
+* Use `say` in migration instead of `puts`
 * Set an empty string as the default constraint for non-required string and text fields in migration.
 
 ```ruby
@@ -60,4 +60,4 @@ end
 * Do not change a migration after it has been merged or deployed the desired
   change can be solved with another migration.
 * Do not change old migration files unless it won't affect behavior or you have a very good reason.
-* Do not migrate "data" in a db migration file.
+* Do not migrate "data" in a db migration file. Use `lib/tasks/data/migrate` rake tasks instead.
