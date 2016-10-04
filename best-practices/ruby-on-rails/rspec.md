@@ -4,6 +4,8 @@
   [Use Factory Girl's build_stubbed for a Faster Test Suite][faster-test].
 * Avoid `its`, `specify`, and `before` in RSpec.
 * Avoid `let` (or `let!`) in RSpec. Prefer extracting helper methods, [Let's Not]
+* Use [Four phase test][four-phase-test] testing pattern for unit test. And 
+  separate setup, exercise, verification, and teardown phases with newlines.
 * Avoid `any_instance` in rspec-mocks and mocha. Prefer [dependency injection].
   but do not re-implement the functionality of `let`. [Example][avoid-let].
 * Avoid using `subject` explicitly *inside of an* RSpec `it` block.
@@ -23,6 +25,7 @@
 * Use non-[SUT] methods in expectations when possible.
 
 [faster-test]: https://robots.thoughtbot.com/use-factory-girls-build-stubbed-for-a-faster-test
+[four-phase-test]: https://robots.thoughtbot.com/four-phase-test
 [dependency injection]: http://en.wikipedia.org/wiki/Dependency_injection
 [subject-example]: ../style/testing/unit_test_spec.rb
 [avoid-let]: ../style/testing/avoid_let_spec.rb
