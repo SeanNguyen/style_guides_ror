@@ -9,6 +9,27 @@ Please set your editor ruler (or margin, column in some editor) at 100.
 > Rationale: Readablity, especially in GitHub interface, macbook built-in screen or vertical
 > split screen.
 
+### EditorConfig
+
+Please install corrsponding plugin for EditorConfig.
+
+The config file `.editorconfig` indicates the most basic coding style we are using. Following is the content as of 2016-10-04:
+
+```
+[*]
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+indent_size = 4
+```
+
+* If you are using Sublime Text, try `TrailingSpaces` package.
+* Note for `insert_final_newline`: <https://robots.thoughtbot.com/no-newline-at-end-of-file>
+
 ### Whitespace / Indentations / Newlines
 
 You can run `rubocop` against following files and inspect the result.
