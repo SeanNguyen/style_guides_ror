@@ -12,6 +12,7 @@
   [Example][subject-example].
 * Avoid using instance variables in tests.
 * Avoid `before(:all)`
+* Use `not_to` instead of `to_not` in RSpec expectations.
 * Disable real HTTP requests to external services with
   `WebMock.disable_net_connect!`.
 * Don't test private methods.
