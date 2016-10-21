@@ -36,11 +36,7 @@ In particular: **if you have commit access, please don't merge changes without w
 
 [contribution guidelines]: /CONTRIBUTING.md
 
-## License
-
-It is distributed under the [Creative Commons Attribution License](http://creativecommons.org/licenses/by/3.0/)
-
-Reference:
+## Attribution
 
 * https://github.com/airbnb/ruby (Copyright)
 * https://github.com/thoughtbot/guides (CC-BY)
