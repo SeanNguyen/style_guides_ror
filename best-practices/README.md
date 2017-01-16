@@ -22,6 +22,7 @@ These are not to be blindly followed; strive to understand these and ask when in
   * [Ruby](/best-practices/ruby-on-rails/ruby.md)
   * [Rails](/best-practices/ruby-on-rails/rails.md)
   * [RSpec](/best-practices/ruby-on-rails/rspec.md)
+  * [RSpec-Given](/best-practices/ruby-on-rails/rspec-given.md)
   * [Migration](/best-practices/ruby-on-rails/migration.md)
   * [Pundit](/best-practices/ruby-on-rails/pundit.md)
   * [Timezone](/best-practices/ruby-on-rails/timezone.md)
