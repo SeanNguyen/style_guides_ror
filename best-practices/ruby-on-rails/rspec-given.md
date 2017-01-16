@@ -144,5 +144,48 @@ When { alexis.do_something }
 Then { alexis.whodunnit = 'what the hell does whodunnit mean?' }
 ```
 
+## Strict preference for simple setups
+```
+# Good: Concise setups
+Given(:user) { create(:user) }
+When { user.attack! }
+Then { user.action == 'attack' }
+```
+```
+# Extremely bad: Massive setups
+# Strong indicators of bad design and / or architecture
+# Suggestions for improvement:
+#  1. Decoupling / Demodularization (Strongly preferred)
+#  2. Reassess requirements (Secondary preference, solution may not be fixing root cause)
+#  3. Enhance factories (Not so preferred, typically hiding logic)
+#  4. Extraction of logic into service objects (Not so preferred as well, typically just hiding the mess)
+Given { login_admin }
+Given(:hierarchy) { create(:hierarchy) }
+Given(:fair_price_brand) { create(:brand, name: 'Fair Price') }
+Given(:boon_lay_catalog) { create(:catalog, brand: fair_price_brand, 'Boon Lay') }
+Given(:cbp_catalog) { create(:catalog, brand: fair_price_brand, 'CBP') }
+Given(:core_product) { create_intermediate_product }
+Given(:fair_price_brand_product) { create_apple_brand_product(core_product, fair_price_brand, category) }
+Given(:create_catalog_product) { fair_price_brand_product, boon_lay_catalog) }
+Given(:create_catalog_product) { fair_price_brand_product, cbp_catalog) }
+```
+
+## Avoid using Given!
+```
+Given(:user) { create(:user) } # Good: Executed only if used
+Given(:user) { create(:user) } # Not so good: Always executed even if unused
+```
+
+## Prefer RSpec-expectation
+```
+Then { expect(a).to eq(b) }   # Good: RSpec style
+Then { a.should == b }        # Bad: Deprecated RSpec style
+```
+
+## Cases of expect().to receive(:method)
+```
+# To be added
+```
+
 ## Keep factories thin
 - Should only contain necessary information of setup
