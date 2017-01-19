@@ -92,12 +92,12 @@ end
 context 'change name' do
   Given(:user) { build(:user) }
 
-  context 'user is not persisted' do
+  context 'user is not readonly' do
     When { user.change_name('Taher') }
     Then { user.name == "Taher" }
   end
 
-  context 'user is already persisted' do
+  context 'user is already readonly' do
     Given(:user) { create(:user, name: 'Ronald') } # Good: Clarify intent of modification
     When { user.change_name 'Taher' }
     Then { user.name != 'Taher' }
