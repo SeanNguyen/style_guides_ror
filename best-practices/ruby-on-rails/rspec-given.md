@@ -192,7 +192,7 @@ Given(:create_catalog_product) { fair_price_brand_product, cbp_catalog) }
 
 ```
 Given(:user) { create(:user) } # Good: Executed only if used
-Given(:user) { create(:user) } # Not so good: Always executed even if unused
+Given!(:user) { create(:user) } # Not so good: Always executed even if unused
 ```
 
 ## Prefer RSpec-expectation
