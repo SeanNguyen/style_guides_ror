@@ -29,7 +29,7 @@
 
 ## Avoid top-level Givens
 
-```
+```ruby
 context "with no items" do
   Given(:initial_contents) { [] } # Good: Start Givens from level 2 onwards
   Then { stack.depth == 0 }
@@ -43,14 +43,14 @@ context "with no items" do
 end
 ```
 
-```
+```ruby
 describe Stack do
   Given(:stack) { stack_with(initial_contents) } # Bad: Avoid top level Givens
   ...
 end
 ```
 
-```
+```ruby
 describe UserController, type: :controller do
   Given { authenticate_admin! } # Good: Perform special cases which covers 100% of cases such as authentication
 end
@@ -58,7 +58,7 @@ end
 
 ## Keep contexts within 3-levels
 
-```
+```ruby
 # Good: KISS (Keeps it simple stupid)
 describe Bruce do # Level 1
   context 'characteristics' do # Level 2
@@ -70,7 +70,7 @@ describe Bruce do # Level 1
 end
 ```
 
-```
+```ruby
 # Bad: Mount everest codebase
 describe CutiePie do # Level 1
   context 'characteristics' do # Still ok: Level 2
@@ -88,7 +88,7 @@ end
 
 ## Show important changes in setup
 
-```
+```ruby
 context 'change name' do
   Given(:user) { build(:user) }
 
@@ -108,14 +108,14 @@ end
 
 ## Prefer natural assertion
 
-```
+```ruby
 # Preferred: Natural assertion
 Then { stack.top == :second_item }
 Then { stack.depth == original_depth - 1 }
 Then { result == Failure(Stack::UnderflowError, /empty/) }
 ```
 
-```
+```ruby
 # Ok: RSpec expectations
 Then { expect(stack.top).to eq(:second_item) }
 Then { expect(stack.depth).to eq(original_depth - 1) }
@@ -123,21 +123,21 @@ Then { expect(result).to have_failed(Stack::UnderflowError, /empty/) }
 ```
 
 ## Prefer Then unless setup is heavy
-```
+```ruby
 # Good: Use Thens on simple cases
 Given(:user) { create(:user) }
 Then { user.name == 'Mingsheng' }
 Then { user.description == 'Professional' }
 ```
 
-```
+```ruby
 # Good: Use `And` only when setup is heavy
 Given(:users) { create_list(:user, 1_000_000_000) }
 Then { users.first.name == 'Manic' }
 And { users.first.description == 'Loves performance' }
 ```
 
-```
+```ruby
 # Bad: Using `Then` when setup is heavy
 Given(:users) { create_list(:user, 1_000_000_000) }
 Then { users.first.name == 'Developer X' }
@@ -146,14 +146,14 @@ Then { users.first.description == 'Slow as hell with 2 setup passes' }
 
 ## Use descriptive method naming
 
-```
+```ruby
 # Good: Meaningful method names
 Given(:user) { create(:user) }
 When { user.attack! }
 Then { user.action == 'attack' }
 ```
 
-```
+```ruby
 # Bad: Nonsensical naming
 Given(:alexis) { create(:user) }
 When { alexis.do_something }
@@ -162,14 +162,14 @@ Then { alexis.whodunnit = 'what the hell does whodunnit mean?' }
 
 ## Strict preference for simple setups
 
-```
+```ruby
 # Good: Concise setups
 Given(:user) { create(:user) }
 When { user.attack! }
 Then { user.action == 'attack' }
 ```
 
-```
+```ruby
 # Extremely bad: Massive setups
 # Strong indicators of bad design and / or architecture
 # Suggestions for improvement:
@@ -190,21 +190,21 @@ Given(:create_catalog_product) { fair_price_brand_product, cbp_catalog) }
 
 ## Avoid using Given!
 
-```
+```ruby
 Given(:user) { create(:user) } # Good: Executed only if used
 Given!(:user) { create(:user) } # Not so good: Always executed even if unused
 ```
 
 ## Prefer RSpec-expectation
 
-```
+```ruby
 Then { expect(a).to eq(b) }   # Good: RSpec style
 Then { a.should == b }        # Bad: Deprecated RSpec style
 ```
 
 ## Cases of expect().to receive(:method)
 
-```
+```ruby
 # To be added
 ```
 
