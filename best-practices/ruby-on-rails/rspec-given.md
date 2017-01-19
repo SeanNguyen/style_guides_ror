@@ -30,29 +30,26 @@
 ## Avoid top-level Givens
 
 ```ruby
-context "with no items" do
-  Given(:initial_contents) { [] } # Good: Start Givens from level 2 onwards
-  Then { stack.depth == 0 }
+describe Stack do
+  # Good: Start Givens from level 2 onwards
 
-  context "when pushing" do
-    When { stack.push(:an_item) }
-
-    Then { stack.depth == 1 }
-    Then { stack.top == :an_item }
+  context "with no items" do
+    Given(:stack) { ... }
+    ...
   end
 end
 ```
 
 ```ruby
 describe Stack do
-  Given(:stack) { stack_with(initial_contents) } # Bad: Avoid top level Givens
+  Given(:stack) { ... } # Bad: Avoid top level Givens
   ...
 end
 ```
 
 ```ruby
 describe UserController, type: :controller do
-  Given { authenticate_admin! } # Good: Perform special cases which covers 100% of cases such as authentication
+  Given { authenticate_admin! } # Good: Perform special cases such as authentication
 end
 ```
 
