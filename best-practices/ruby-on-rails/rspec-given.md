@@ -1,8 +1,7 @@
 # Objective
 
-- To provide a baseline guidelines which allows sufficient space for personal growth and development
 - To unify honestbee styles
-- To drive software quality
+- To provide a baseline guidelines for developers' reference
 
 # Priority Tree
 
@@ -11,41 +10,35 @@
 
 2. Simplicity
   - Simple, dumb and deterministic assertions
-  - Target only high-value system components (Price is correct? (high-value) v.s. is a button red? (low-value))
-  - Generate 80% output with 20% effort (Pareto Principle)
+  - Target only [high-value system components][pareto-principle] (Price is correct? (high-value) v.s. is a button red? (low-value))
 
 3. Performance
   - Development speed > test execution time (if it comes to the point of making a compromise)
   - Most likely, if the top priorities are met, performance usually becomes better
 
 [DAMP]:http://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests/11837974#11837973
-
-# Change Management
-
-- New specs: RSpec-Given
-- Old specs / small fixes: No strict rule, prefer RSpec-Given
-- Target gradual shift towards RSpec-Given by:
-  1. Having newcomers migrate test codes for their early 1 - 2 weeks
-  2. Getting interns / part-timers to migrate
+[pareto-principle]: https://en.wikipedia.org/wiki/Pareto_principle
 
 # Structural Guidelines
 
 ## Avoid top-level Givens
 
+Addressing the [Mystery Guest][lets-not] issue solves the largest concern: readability
+
 ```ruby
-describe Stack do
+describe Order do
   # Good: Start Givens from level 2 onwards
 
-  context "with no items" do
-    Given(:stack) { ... }
+  context "with only grocery products" do
+    Given(:order) { ... }
     ...
   end
 end
 ```
 
 ```ruby
-describe Stack do
-  Given(:stack) { ... } # Bad: Avoid top-level Givens
+describe Order do
+  Given(:order) { ... } # Bad: Avoid top-level Givens
   ...
 end
 ```
@@ -55,6 +48,8 @@ describe UserController, type: :controller do
   Given { authenticate_admin! } # Good: Perform special cases such as authentication
 end
 ```
+
+[lets-not]: https://robots.thoughtbot.com/lets-not
 
 ## Keep contexts within 3-levels
 
@@ -91,7 +86,7 @@ end
 ## Show important changes in setup
 
 ```ruby
-describe Bruce do
+describe User do
   context 'change name' do
     Given(:user) { build(:user) }
 
@@ -100,11 +95,17 @@ describe Bruce do
       Then { user.name == "Taher" }
     end
 
+    context 'user is banned' do                                       # Good: Clear separation of context
+      When(:result) { user.change_name('Taher') }
+      Then { result == Failure(InvalidActionError, /banned/i) }
+    end
+
     context 'user is readonly' do
-      Given(:user) { create(:user, name: 'Ronald') } # Good: Clarify intent of modification
+      Given(:user) { build(:user, name: 'Ali', readonly: true) }   # Good: Clarify intent of modification
+
       When { user.change_name 'Taher' }
       Then { user.name != 'Taher' }
-      Then { user.name == 'Ronald' }
+      Then { user.name == 'Ali' }
     end
   end
 end
@@ -129,6 +130,9 @@ Then { expect(result).to have_failed(Stack::UnderflowError, /empty/) }
 ```
 
 ## Prefer Then unless setup is heavy
+
+Documentation recommends [sticking to Then][prefer-then-over-and] by default
+
 ```ruby
 # Good: Use Thens on simple cases
 Given(:user) { create(:user) }
@@ -150,10 +154,14 @@ Then { users.first.name == 'Developer X' }
 Then { users.first.description == 'Slow as hell with 2 setup passes' }
 ```
 
+[prefer-then-over-and]: https://github.com/jimweirich/rspec-given#and
+
 ## Use descriptive method naming
 
-```ruby
+Use meaningful, intention-revealing method names.
+Reference: [Clean Code: Chapter 2 - Meaningful Names][clean-code]
 
+```ruby
 Given(:user) { build(:user) }
 When { user.attack! }
 Then { user.action == 'attack' }  # Good: Meaningful method names
@@ -167,6 +175,7 @@ When { user.attack! }
 Then { user.action == 'defend' }  # Bad: Assertion mismatch with executed method
 ```
 
+[clean-code]: http://ricardogeek.com/docs/clean_code.pdf
 
 ## Strict preference for simple setups
 
@@ -198,11 +207,17 @@ Given(:create_catalog_product) { ... }
 Given(:create_catalog_product) { ... }
 ```
 
-## Prefer Given over Given!
+## Use Given / Given! with consideration for performance
+
+[Avoiding database][avoid-factory-creation] makes you ~100% faster.
 
 ```ruby
-Given(:user) { create(:user) } # Good: Executed only if used
-Given!(:user) { create(:user) } # Not so good: Always executed even if unused
+# Preferred
+Given(:user) { create(:user) }    # Executed only if called
+
+# Be aware of usage
+Given { create(:user) }           # Always executed
+Given!(:user) { create(:user) }   # Always executed
 ```
 
 ## Prefer RSpec-expectation
@@ -225,7 +240,7 @@ Then { expect_elegant_code }
 
 ## Keep factories thin
 
-Should only contain necessary information of setup
+Avoid perma-passing tests by [setting up factories with the bare minimum][skinny-factories]
 
 ```ruby
 # Good: Only initializes required fields by default
@@ -260,17 +275,35 @@ end
 create(:user, :confirmed)
 ```
 
+[skinny-factories]: https://robots.thoughtbot.com/factories-should-be-the-bare-minimum
+
 ## Prefer FactoryGirl.build over FactoryGirl.create
+
+Gain 100% better performance by [avoiding database write in factory creation][avoid-factory-creation]
 
 ```
 build(:user)    # Preferred
 create(:user)
 ```
 
-## Avoid writing FactoryGirl
+[avoid-factory-creation]: https://robots.thoughtbot.com/speed-up-tests-by-selectively-avoiding-factory-girl
+
+## Avoid writing 'FactoryGirl'
+
+Why write more when you can write less? It's already [configured][avoid-writing-factorygirl]
 
 ```
 build(:user)              # Good
 
 FactoryGirl.build(:user)  # Bad
 ```
+
+[avoid-writing-factorygirl]: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md#rspec
+
+# Change Management
+
+- New specs: RSpec-Given
+- Old specs / small fixes: No strict rule, prefer RSpec-Given
+- Target gradual shift towards RSpec-Given by:
+  1. Having newcomers migrate test codes for their early 1 - 2 weeks (Preferred as it helps them familiarize)
+  2. Getting interns / part-timers to migrate (Not preferred unless expanding test coverage)
