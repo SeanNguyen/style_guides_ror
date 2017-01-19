@@ -1,21 +1,24 @@
 # Objective
 
-- To provide a baseline expectation on test expectation with sufficient space for growth and development
+- To provide a baseline guidelines which allows sufficient space for personal growth and development
 - To unify honestbee styles
+- To drive software quality
 
 # Priority Tree
 
-1. Simple, dumb tests
-2. Un-DRY is OK
-  - Some repetition is fine, as long as test is well-understood
-3. Maintainability & readability
-  - Avoid coupling of test cases / setup
-4. Target high value
+1. Readability & Maintainability
+  - Prefer [DAMP] (Descriptive And Meaningful Phrases) over DRY (Don't Repeat Yourself)
+
+2. Simplicity
+  - Simple, dumb and deterministic assertions
+  - Target only high-value system components (Price is correct? (high-value) v.s. is a button red? (low-value))
   - Generate 80% output with 20% effort (Pareto Principle)
-  - I.e. avoid low-value tests like view tests
-5. Performance
-  - Execution speed can be paid off by spending more on infrastructure
-  - Development speed cannot be paid off cheaply by hiring more
+
+3. Performance
+  - Development speed > test execution time (if it comes to the point of making a compromise)
+  - Most likely, if the top priorities are met, performance usually becomes better
+
+[DAMP]:http://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests/11837974#11837973
 
 # Change Management
 
@@ -25,7 +28,7 @@
   1. Having newcomers migrate test codes for their early 1 - 2 weeks
   2. Getting interns / part-timers to migrate
 
-# Style Guidelines & Usage
+# Structural Guidelines
 
 ## Avoid top-level Givens
 
@@ -42,7 +45,7 @@ end
 
 ```ruby
 describe Stack do
-  Given(:stack) { ... } # Bad: Avoid top level Givens
+  Given(:stack) { ... } # Bad: Avoid top-level Givens
   ...
 end
 ```
@@ -57,9 +60,9 @@ end
 
 ```ruby
 # Good: KISS (Keeps it simple stupid)
-describe Bruce do # Level 1
-  context 'characteristics' do # Level 2
-    context 'at work' do # Level 3
+describe Bruce do                         # Level 1
+  context '#characteristics' do           # Level 2
+    context 'at work' do                  # Level 3
       Given { ... }
       Then { ... }
     end
@@ -69,12 +72,14 @@ end
 
 ```ruby
 # Bad: Mount everest codebase
-describe CutiePie do # Level 1
-  context 'characteristics' do # Still ok: Level 2
-    context 'at work' do # Fine: Level 3
-      context 'goes deep' do # Oh my god: Level 4
-        context 'like, really deep' do # BAD: Level 5
-          context 'like mountain climbing' do # KILL YOURSELF: Level 6
+describe CutiePie do                              # Level 1
+  context '#characteristics' do                   # Level 2
+    context 'at work' do                          # Level 3
+      context 'goes high' do                      # Level 4: Ideally not...
+        context 'like, really high' do            # Level 5: Bad
+          context 'like mountain climbing' do     # Level 6: Very, very bad
+            Given { ... }
+            Then { ... }
           end
         end
       end
@@ -86,22 +91,26 @@ end
 ## Show important changes in setup
 
 ```ruby
-context 'change name' do
-  Given(:user) { build(:user) }
+describe Bruce do
+  context 'change name' do
+    Given(:user) { build(:user) }
 
-  context 'user is not readonly' do
-    When { user.change_name('Taher') }
-    Then { user.name == "Taher" }
-  end
+    context 'user is not readonly' do
+      When { user.change_name('Taher') }
+      Then { user.name == "Taher" }
+    end
 
-  context 'user is already readonly' do
-    Given(:user) { create(:user, name: 'Ronald') } # Good: Clarify intent of modification
-    When { user.change_name 'Taher' }
-    Then { user.name != 'Taher' }
-    Then { user.name == 'Ronald' }
+    context 'user is readonly' do
+      Given(:user) { create(:user, name: 'Ronald') } # Good: Clarify intent of modification
+      When { user.change_name 'Taher' }
+      Then { user.name != 'Taher' }
+      Then { user.name == 'Ronald' }
+    end
   end
 end
 ```
+
+# Usage Guidelines
 
 ## Prefer natural assertion
 
@@ -144,48 +153,52 @@ Then { users.first.description == 'Slow as hell with 2 setup passes' }
 ## Use descriptive method naming
 
 ```ruby
-# Good: Meaningful method names
-Given(:user) { create(:user) }
+
+Given(:user) { build(:user) }
 When { user.attack! }
-Then { user.action == 'attack' }
+Then { user.action == 'attack' }  # Good: Meaningful method names
 ```
 
 ```ruby
-# Bad: Nonsensical naming
-Given(:alexis) { create(:user) }
-When { alexis.do_something }
-Then { alexis.whodunnit = 'what the hell does whodunnit mean?' }
+# Code smell: Consider renaming your method
+
+Given(:user) { build(:user) }
+When { user.attack! }
+Then { user.action == 'defend' }  # Bad: Assertion mismatch with executed method
 ```
+
 
 ## Strict preference for simple setups
 
 ```ruby
 # Good: Concise setups
-Given(:user) { create(:user) }
+Given(:user) { build(:user) }
 When { user.attack! }
 Then { user.action == 'attack' }
 ```
 
 ```ruby
-# Extremely bad: Massive setups
+# Code smell: Unnecessary complexity (Massive setups)
 # Strong indicators of bad design and / or architecture
+
 # Suggestions for improvement:
 #  1. Decoupling / Demodularization (Strongly preferred)
 #  2. Reassess requirements (Secondary preference, solution may not be fixing root cause)
 #  3. Enhance factories (Not so preferred, typically hiding logic)
 #  4. Extraction of logic into service objects (Not so preferred as well, typically just hiding the mess)
+
 Given { login_admin }
 Given(:hierarchy) { create(:hierarchy) }
 Given(:fair_price_brand) { create(:brand, name: 'Fair Price') }
-Given(:boon_lay_catalog) { create(:catalog, brand: fair_price_brand, 'Boon Lay') }
-Given(:cbp_catalog) { create(:catalog, brand: fair_price_brand, 'CBP') }
-Given(:core_product) { create_intermediate_product }
-Given(:fair_price_brand_product) { create_apple_brand_product(core_product, fair_price_brand, category) }
-Given(:create_catalog_product) { fair_price_brand_product, boon_lay_catalog) }
-Given(:create_catalog_product) { fair_price_brand_product, cbp_catalog) }
+Given(:boon_lay_catalog) { ... }
+Given(:cbp_catalog) { ... }
+Given(:core_product) { ... }
+Given(:fair_price_brand_product) { ... }
+Given(:create_catalog_product) { ... }
+Given(:create_catalog_product) { ... }
 ```
 
-## Avoid using Given!
+## Prefer Given over Given!
 
 ```ruby
 Given(:user) { create(:user) } # Good: Executed only if used
@@ -202,9 +215,62 @@ Then { a.should == b }        # Bad: Deprecated RSpec style
 ## Cases of expect().to receive(:method)
 
 ```ruby
-# To be added
+# Good: Pre-expectation with readability
+Given(:dao_le) { DaoLe.new }
+Given!(:expect_elegant_code) { expect_any_instance_of(DaoLe).to receive(:elegant_code) }
+
+When { dao_le.code }
+Then { expect_elegant_code }
 ```
 
 ## Keep factories thin
 
-- Should only contain necessary information of setup
+Should only contain necessary information of setup
+
+```ruby
+# Good: Only initializes required fields by default
+factory :product do
+  external_id { ... }
+  price { ... }
+end
+```
+
+```ruby
+factory :product do
+  external_id { ... }
+  price { ... }
+  image_url { 'http://localhost' }  # Bad: Non-required field included
+end
+
+Given(:product) { build(:product) }
+When { product.do_something }
+Then { product.image_url == 'http://localhost' }  # Bad: Always passing test
+```
+
+```
+# Good: Setup useful traits with minimal values
+factory :user do
+  email { ... }
+
+  trait :confirmed do
+    confirmed_at { ... }
+  end
+end
+
+create(:user, :confirmed)
+```
+
+## Prefer FactoryGirl.build over FactoryGirl.create
+
+```
+build(:user)    # Preferred
+create(:user)
+```
+
+## Avoid writing FactoryGirl
+
+```
+build(:user)              # Good
+
+FactoryGirl.build(:user)  # Bad
+```
