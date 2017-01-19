@@ -101,7 +101,7 @@ describe User do
     end
 
     context 'user is readonly' do
-      Given(:user) { build(:user, name: 'Ali', readonly: true) }   # Good: Clarify intent of modification
+      Given(:user) { build(:user, name: 'Ali', readonly: true) }      # Good: Clarify intent of modification
 
       When { user.change_name 'Taher' }
       Then { user.name != 'Taher' }
@@ -168,11 +168,11 @@ Then { user.action == 'attack' }  # Good: Meaningful method names
 ```
 
 ```ruby
-# Code smell: Consider renaming your method
-
 Given(:user) { build(:user) }
 When { user.attack! }
 Then { user.action == 'defend' }  # Bad: Assertion mismatch with executed method
+
+# Code smell: Consider renaming your method
 ```
 
 [clean-code]: http://ricardogeek.com/docs/clean_code.pdf
@@ -223,8 +223,8 @@ Given!(:user) { create(:user) }   # Always executed
 ## Prefer RSpec-expectation
 
 ```ruby
-Then { expect(a).to eq(b) }   # Good: RSpec style
-Then { a.should == b }        # Bad: Deprecated RSpec style
+Then { expect(a).to eq(b) }       # Good: RSpec style
+Then { a.should == b }            # Bad: Deprecated RSpec style
 ```
 
 ## Cases of expect().to receive(:method)
@@ -254,7 +254,7 @@ end
 factory :product do
   external_id { ... }
   price { ... }
-  image_url { 'http://localhost' }  # Bad: Non-required field included
+  image_url { 'http://localhost' }                # Bad: Non-required field included
 end
 
 Given(:product) { build(:product) }
@@ -263,16 +263,15 @@ Then { product.image_url == 'http://localhost' }  # Bad: Always passing test
 ```
 
 ```
-# Good: Setup useful traits with minimal values
 factory :user do
   email { ... }
 
   trait :confirmed do
-    confirmed_at { ... }
+    confirmed_at { ... }                          # Good: Setup useful traits with minimal values
   end
 end
 
-create(:user, :confirmed)
+create(:user, :confirmed)                         # Good: Simple, concise usage
 ```
 
 [skinny-factories]: https://robots.thoughtbot.com/factories-should-be-the-bare-minimum
@@ -282,7 +281,7 @@ create(:user, :confirmed)
 Gain 100% better performance by [avoiding database write in factory creation][avoid-factory-creation]
 
 ```
-build(:user)    # Preferred
+build(:user)                      # Preferred
 create(:user)
 ```
 
@@ -293,9 +292,9 @@ create(:user)
 Why write more when you can write less? It's already [configured][avoid-writing-factorygirl]
 
 ```
-build(:user)              # Good
+build(:user)                      # Good
 
-FactoryGirl.build(:user)  # Bad
+FactoryGirl.build(:user)          # Never
 ```
 
 [avoid-writing-factorygirl]: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md#rspec
