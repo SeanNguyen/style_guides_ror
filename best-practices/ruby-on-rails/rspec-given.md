@@ -231,11 +231,11 @@ Then { a.should == b }            # Bad: Deprecated RSpec style
 
 ```ruby
 # Good: Pre-expectation with readability
-Given(:dao_le) { DaoLe.new }
-Given!(:expect_elegant_code) { expect_any_instance_of(DaoLe).to receive(:elegant_code) }
+Given(:honestbee) { Honestbee.new }
+Given!(:expect_elegant_code_from_dao_le) { expect(DaoLe).to receive(:write_elegant_code) }
 
-When { dao_le.code }
-Then { expect_elegant_code }
+When { honestbee.inspect_quality }
+Then { expect_elegant_code_from_dao_le }
 ```
 
 ## Keep factories thin
