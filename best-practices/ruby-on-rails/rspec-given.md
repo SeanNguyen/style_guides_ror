@@ -232,7 +232,7 @@ Then { a.should == b }            # Bad: Deprecated RSpec style
 ```ruby
 # Good: Pre-expectation with readability
 Given(:honestbee) { Honestbee.new }
-Given!(:expect_elegant_code_from_dao_le) { expect(DaoLe).to receive(:write_elegant_code) }
+Given!(:expect_elegant_code_from_dao_le) { expect(honestbee).to receive(:write_elegant_code) }
 
 When { honestbee.inspect_quality }
 Then { expect_elegant_code_from_dao_le }
